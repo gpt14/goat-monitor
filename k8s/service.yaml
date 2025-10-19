@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: goat-exporter
+  namespace: goat-node
+  labels:
+    app: goat-exporter
+spec:
+  selector:
+    app: goat-exporter
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8000

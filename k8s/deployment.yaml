@@ -1,0 +1,27 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: goat-exporter
+  namespace: goat-node
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: goat-exporter
+  template:
+    metadata:
+      labels:
+        app: goat-exporter
+    spec:
+      containers:
+        - name: goat-exporter
+          image: goat-exporter:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: GOAT_RPC_URL
+              valueFrom:
+                secretKeyRef:
+                  name: goat-rpc-secret
+                  key: GOAT_RPC_URL
+          ports:
+            - containerPort: 8000

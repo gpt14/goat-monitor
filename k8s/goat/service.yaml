@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: goat-node
+  namespace: goat-node
+  labels:
+    app: goat-node
+spec:
+  selector:
+    app: goat-node
+  ports:
+    - protocol: TCP
+      port: 8545
+      targetPort: 8545

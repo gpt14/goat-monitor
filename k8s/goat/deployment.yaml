@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: goat-node
+  namespace: goat-node
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: goat-node
+  template:
+    metadata:
+      labels:
+        app: goat-node
+    spec:
+      volumes:
+        - name: geth-ipc
+          emptyDir: {}
+        - name: goat-data
+          emptyDir: {}
+      containers:
+        - name: geth
+          image: ghcr.io/goatnetwork/goat-geth:v0.3.3
+          imagePullPolicy: IfNotPresent
+          args:
+            - --goat=mainnet
+            - --http
+            - --http.api=eth,net,web3
+            - --http.addr=0.0.0.0
+            - --http.vhosts=*
+            - --http.corsdomain=*
+            - --ws
+            - --ws.origins=*
+            - --ws.addr=0.0.0.0
+          ports:
+            - containerPort: 8545
+            - containerPort: 30303
+          volumeMounts:
+            - name: geth-ipc
+              mountPath: /root/.ethereum
+        - name: goat
+          image: ghcr.io/goatnetwork/goat:v0.3.3
+          imagePullPolicy: IfNotPresent
+          args:
+            - start
+            - --goat.geth=/geth/geth.ipc
+            - --chain-id=goat-mainnet
+            - --grpc.address=0.0.0.0:9090
+            - --api.enable
+            - --api.address=tcp://0.0.0.0:1317
+          volumeMounts:
+            - name: geth-ipc
+              mountPath: /geth
+            - name: goat-data
+              mountPath: /root/.goat
