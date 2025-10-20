@@ -16,12 +16,12 @@ spec:
       containers:
         - name: goat-exporter
           image: goat-exporter:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Never
           env:
-            - name: GOAT_RPC_URL
+            - name: GOAT_RPC_NODE
               valueFrom:
                 secretKeyRef:
                   name: goat-rpc-secret
-                  key: GOAT_RPC_URL
+                  key: GOAT_RPC_NODE
           ports:
             - containerPort: 8000

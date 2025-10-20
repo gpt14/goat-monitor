@@ -1,12 +1,17 @@
 FROM python:3.11-slim
 
-WORKDIR /app
-COPY exporter.py .
+ENV GOAT_RPC_NODE=
 
-RUN pip install prometheus_client requests
+WORKDIR /app
+
+COPY requirements.txt .
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY exporter.py .
 
 EXPOSE 8000
 
-ENV GOAT_RPC_URL=
+USER nobody
 
 CMD ["python", "exporter.py"]

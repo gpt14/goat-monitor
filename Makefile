@@ -5,7 +5,12 @@ NAMESPACE := default
 
 # --- Default Target ---
 .PHONY: all
-all: build-image create-cluster load-image deploy-ingress deploy-exporter status
+all: build-image create-cluster load-image create-secret deploy-ingress deploy-exporter status
+
+.PHONY: create-secret
+create-secret:
+	@echo "========Creating Kubernetes secret for Goat RPC URL========"
+	@kubectl create secret generic goat-rpc-secret --from-env-file=.env -n goat-node -o=yaml --dry-run=client > k8s/secret.yaml
 
 .PHONY: build-image
 build-image:

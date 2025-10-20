@@ -1,9 +1,13 @@
 import os
 import time
 import requests
-from prometheus_client import start_http_server, Gauge
+from prometheus_client import start_http_server, Gauge, REGISTRY, PROCESS_COLLECTOR, PLATFORM_COLLECTOR, GC_COLLECTOR
 
-GOAT_RPC_URL = os.getenv("GOAT_RPC_URL", "https://rpc.ankr.com/goat_mainnet")
+REGISTRY.unregister(PROCESS_COLLECTOR)
+REGISTRY.unregister(PLATFORM_COLLECTOR)
+REGISTRY.unregister(GC_COLLECTOR)
+
+GOAT_RPC_URL = os.getenv("GOAT_RPC_NODE", "https://rpc.ankr.com/goat_mainnet")
 
 # Define Prometheus metrics
 block_height_gauge = Gauge("goat_block_height", "Current Goat block height")
