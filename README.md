@@ -1,3 +1,20 @@
+## Introduction
+
+The project contains kubernetes manifests files to setup a [GOAT RPC node](https://github.com/GOATNetwork/goat/blob/main/docker/mainnet.yaml) and a Prometheus exporter to monitor Current block height, Chain ID, Syncing status metrics for the GOAT RPC node.
+The exporter pulls the metrics by sending RPC requests to the GOAT node.
+
+```
+curl -X POST http://localhost:8545 \
+  -H "Content-Type: application/json" \
+  --data '{"jsonrpc":"2.0","method":"<method>","params":[],"id":1}'
+```
+where the `<method>` can be `eth_blockNumber`, `eth_chainId` and `eth_syncing`
+
+The GOAT RPC node is deployed as a single pod with two containers - `goat-get` and `goat` and is exposed as a `ClusterIP` service within a Kind cluster accessible at `http://goat-node.goat-node.svc`
+The exporter is deployed as another pod running a single container and is exposed as an NGINX ingress accessible outside the Kind cluster at `http://goat-exporter.localtest.me`.
+
+The deployment of the project on a local Kind cluster is automated using Make targets.
+
 ## Prerequisites
 1. Docker
 2. Kind
